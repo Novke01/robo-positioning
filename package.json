@@ -1,0 +1,32 @@
+{
+  "name": "robo-positioning",
+  "version": "1.0.0",
+  "description": "Finding robot's position relative to beacons.",
+  "main": "index.js",
+  "dependencies": {
+    "electron-canvas-to-buffer": "^2.0.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "electron": "^1.4.15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Novke01/robo-positioning.git"
+  },
+  "keywords": [
+    "robot",
+    "position"
+  ],
+  "author": "Aleksandar Novakovic <anovakovic01@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Novke01/robo-positioning/issues"
+  },
+  "homepage": "https://github.com/Novke01/robo-positioning#readme"
+}
