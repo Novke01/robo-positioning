@@ -4,11 +4,12 @@ const Point = require('./point');
 class Positioning {
 
     constructor (width, height) {
-        this.width = width;
-        this.height = height;
+        this.width = width;      // 3000
+        this.height = height;    // 2000
         this._maxDistance = Math.sqrt(width * width + height * height);
-        this.minDiff = 300;
-        this.maxOffset = 65; 
+        this._minDiff = 300;
+        this._maxOffset = 65;
+        this._triangleSide = Math.sqrt(width * width + height * height / 4); 
     }
 
     findBeacons (arr) {
@@ -59,15 +60,48 @@ class Positioning {
         let angles = Object.getOwnPropertyNames(points);
         let anglesSize = angles.length;
 
-        for (let firstPoint = 0; firstPoint < anglesSize; firstPoint++) {
-            for (let secondPoint = firstPoint + 1; secondPoint < anglesSize; secondPoint++) {
-                for (let thirdPoint = secondPoint + 1; thirdPoint < anglesSize; thirdPoint++) {
-                    // Check if these three points make triangle.
+        for (let firstAngle = 0; firstAngle < anglesSize; firstAngle++) {
+
+            let firstPointDist = points[angles[firstAngle]];
+
+            for (let secondAngle = firstAngle + 1; secondAngle < anglesSize; secondAngle++) {
+
+                let secondPointDist = points[angles[secondAngle]];
+                let distFirstSecond = _calculateDistance(firstPointDist, angle[firstAngle], secondPointDist, angle[secondAngle]);
+
+                if (Math.abs(distFirstSecond - this.height) < this._maxOffset) {
+                    for (let thirdAngle = secondAngle + 1; thirdAngle < anglesSize; thirdAngle++) {
+                        
+                        let thirdPointDist = points[angles[thirdAngle]];
+                        let distFirstThird = _calculateDistance(firstPointDist, angle[firstAngle], thirdPointDist, angle[thirdAngle]);
+                        
+                        if (Math.abs(distFirstThird - this._triangleSide) < this._maxOffset) {
+                            let distSecondThird = _calculateDistance(secondPointDist, angle[secondAngle], thirdPointDist, angle[thirdAngle]);
+                            if (Math.abs(distSecondThird - this._triangleSide) < this._maxOffset) {
+                                beacons.push([
+                                    new Point(angles[firstAngle], firstPointDist),
+                                    new Point(angles[secondAngle], secondPointDist),
+                                    new Point(angle[thirdAngle], thirdPointDist)
+                                ]);
+                            }
+                        }                        
+
+                    }
                 }
+
             }
+
         }
 
         return beacons; 
+
+    }
+
+    // Calculate distance using law of cosines.
+    _calculateDistance (firstPointDist, firstAngle, secondPointDist, secondAngle) {
+
+        let angle = (Math.PI / 180) * Math.abs(firstAngle - secondAngle);
+        return Math.sqrt(firstPointDist * firstPointDist + secondPointDist * secondPointDist - 2 * firstPointDist * secondPointDist * Math.cos(angle));
 
     }
 

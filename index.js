@@ -34,11 +34,9 @@ function createWindow () {
 
 // Close app on window close.
 function closeAllWindows () {
-
     if (process.platform !== 'darwin') {
         app.quit();
     }
-
 }
 
 function activateApp () {
