@@ -2,12 +2,44 @@
 
     <head>
         <title>Simulation</title>
+        <link rel="stylesheet" href="style/main.css" />
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+        
     </head>
 
     <body>
 
-        <canvas id="canvas" style="border:1px solid #000000;"></canvas>
-
+        <div class="container"
+            <div class="row">
+                <div class="col-xs-9">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="col-xs-3">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label>Robot X:</label><input type="number" class="form-control" placeholder="X coord" id="roboX" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label>Robot Y:</label><input type="number" class="form-control" placeholder="Y coord" id="roboY" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button id="start-btn" class="btn btn-primary">Start</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script>
+            window.jQuery = window.$ = require('jquery');
+        </script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script>
             require('./rendering/renderer');
         </script>

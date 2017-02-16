@@ -1,9 +1,60 @@
-const canvasBuffer = require('electron-canvas-to-buffer');
+'use strict';
+
 const fs = require('fs');
+const config = require('./../config/config');
+const Positioning = require('./../positioning/positioning');
 
 const canvas = document.getElementById('canvas');
-canvas.width = 1300;
-canvas.height = 900;
 const context = canvas.getContext('2d');
+const startButton = document.getElementById('start-btn');
+const roboXField = document.getElementById('roboX');
+const roboYField = document.getElementById('roboY');
 
-context.strokeRect(50, 50, 1200, 800);
+let robotX = config.robot.x;
+let robotY = config.robot.y;
+
+let tableStartX = 50;
+let tableStartY = 50;
+
+canvas.width = 1000;
+canvas.height = 700;
+
+context.strokeRect(tableStartX, tableStartY, 900, 600);
+
+for (let circle of config.circles) {
+    context.beginPath();
+    context.arc(circle.x / 10 * 3 + tableStartX, circle.y / 10 * 3 + tableStartY, circle.radius / 10 * 3, 0, 2 * Math.PI);
+    context.stroke();
+}
+
+context.beginPath();
+
+context.moveTo(robotX / 10 * 3 + tableStartX - 10, robotY / 10 * 3 + tableStartY - 10);
+context.lineTo(robotX / 10 * 3 + tableStartX + 10, robotY / 10 * 3 + tableStartY + 10);
+
+context.moveTo(robotX / 10 * 3 + tableStartX + 10, robotY / 10 * 3 + tableStartY - 10);
+context.lineTo(robotX / 10 * 3 + tableStartX - 10, robotY / 10 * 3 + tableStartY + 10);
+context.stroke();
+
+startButton.onclick(startSimulation);
+
+function startSimulation () {
+
+    // robotX = roboXField.value;
+    // robotY = roboYField.value;
+    let points = collectPoints();
+    let positioning = Positioning(config.field.width, config.field.height);
+    let beacons = positioning.findBeacons(points);
+    console.log(beacons);
+    // draw all points;
+
+}
+
+function collectPoints () {
+    let points = [];
+    for (let i = 0; i < 360; i++) {
+        // calculate intersection;
+    }
+    return points;
+}
+

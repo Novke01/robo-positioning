@@ -1,0 +1,10 @@
+#canvas {
+    border: 1px solid #000000;
+}
+
+.container {
+    
+    width: auto !important;
+    padding: 0px 0px 0px 0px;
+    margin: 3px 3px 3px 3px;
+}
