@@ -1,13 +1,11 @@
 'use strict';
 
-const fs = require('fs');
 const config = require('./../config/config');
 const Positioning = require('./../positioning/positioning');
 const geometry = require('./../util/geometry');
 const simulation = require('./../simulation/simulation');
+const drawing = require('./../util/drawing');
 
-const canvas = document.getElementById('canvas');
-const context = canvas.getContext('2d');
 const startButton = document.getElementById('start-btn');
 const roboXField = document.getElementById('roboX');
 const roboYField = document.getElementById('roboY');
@@ -15,27 +13,39 @@ const roboYField = document.getElementById('roboY');
 let robotX = config.robot.x;
 let robotY = config.robot.y;
 
-let tableStartX = 50;
-let tableStartY = 50;
+roboXField.value = robotX;
+roboYField.value = robotY;
 
-canvas.width = 1000;
-canvas.height = 700;
-
-context.strokeRect(tableStartX, tableStartY, 900, 600);
+drawing.drawField(1000, 700);
 
 for (let circle of config.circles) {
-    context.beginPath();
-    context.arc(circle.x / 10 * 3 + tableStartX, circle.y / 10 * 3 + tableStartY, circle.radius / 10 * 3, 0, 2 * Math.PI);
-    context.stroke();
+    drawing.drawCircle(robotX, robotY, circle);
 }
 
-context.beginPath();
+drawing.drawRobot(robotX, robotY);
 
-context.moveTo(robotX / 10 * 3 + tableStartX - 10, robotY / 10 * 3 + tableStartY - 10);
-context.lineTo(robotX / 10 * 3 + tableStartX + 10, robotY / 10 * 3 + tableStartY + 10);
+startButton.onclick = startSimulation;
 
-context.moveTo(robotX / 10 * 3 + tableStartX + 10, robotY / 10 * 3 + tableStartY - 10);
-context.lineTo(robotX / 10 * 3 + tableStartX - 10, robotY / 10 * 3 + tableStartY + 10);
-context.stroke();
+function startSimulation () {
 
-startButton.onclick = simulation.startSimulation;
+    robotX = Number(roboXField.value);
+    robotY = Number(roboYField.value);
+    config.robot.x = robotX;
+    config.robot.y = robotY;
+    
+    drawing.clearCanvas();
+    drawing.drawField(1000, 700);
+    for (let circle of config.circles) {
+        drawing.drawCircle(robotX, robotY, circle);
+    }
+    drawing.drawRobot(robotX, robotY);
+    
+    let beacons = simulation.startSimulation(config);
+
+    console.log(beacons);
+
+    for (let triangle of beacons) {
+        drawing.drawTriangle(robotX, robotY, triangle);
+    }
+
+}

@@ -1,33 +1,22 @@
 'use strict';
 
-const config = require('./../config/config');
 const geometry = require('./../util/geometry');
 const Positioning = require('./../positioning/positioning');
+
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
 
 let simulation = {
     startSimulation: startSimulation
 };
 
-function startSimulation () {
+function startSimulation (config) {
 
-    // robotX = roboXField.value;
-    // robotY = roboYField.value;
     let points = collectPoints(config);
-    // console.log(points);
     let positioning = new Positioning(config.field.width, config.field.height);
     let beacons = positioning.findBeacons(points);
-    console.log(beacons);
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    for (let triangle of beacons) {
-        // console.log('====================================================');
-        ctx.beginPath();
-        ctx.moveTo(50 + (config.robot.x + Math.cos(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3);
-        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[1].angle * Math.PI / 180) * triangle[1].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[1].angle * Math.PI / 180) * triangle[1].dist) / 10 * 3);
-        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[2].angle * Math.PI / 180) * triangle[2].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[2].angle * Math.PI / 180) * triangle[2].dist) / 10 * 3);
-        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3);
-        ctx.stroke();
-    }
+
+    return beacons;
     
 }
 
