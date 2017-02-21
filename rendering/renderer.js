@@ -3,6 +3,8 @@
 const fs = require('fs');
 const config = require('./../config/config');
 const Positioning = require('./../positioning/positioning');
+const geometry = require('./../util/geometry');
+const simulation = require('./../simulation/simulation');
 
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
@@ -36,25 +38,4 @@ context.moveTo(robotX / 10 * 3 + tableStartX + 10, robotY / 10 * 3 + tableStartY
 context.lineTo(robotX / 10 * 3 + tableStartX - 10, robotY / 10 * 3 + tableStartY + 10);
 context.stroke();
 
-startButton.onclick(startSimulation);
-
-function startSimulation () {
-
-    // robotX = roboXField.value;
-    // robotY = roboYField.value;
-    let points = collectPoints();
-    let positioning = Positioning(config.field.width, config.field.height);
-    let beacons = positioning.findBeacons(points);
-    console.log(beacons);
-    // draw all points;
-
-}
-
-function collectPoints () {
-    let points = [];
-    for (let i = 0; i < 360; i++) {
-        // calculate intersection;
-    }
-    return points;
-}
-
+startButton.onclick = simulation.startSimulation;

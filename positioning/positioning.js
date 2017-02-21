@@ -10,7 +10,8 @@ class Positioning {
         this._maxDistance = Math.sqrt(width * width + height * height);
         this._minDiff = 300;
         this._maxOffset = 65;
-        this._triangleSide = Math.sqrt(width * width + height * height / 4); 
+        this._triangleSideOffset = 130;
+        this._triangleSide = Math.sqrt(width * width + height * height / 4);
     }
 
     findBeacons (arr) {
@@ -32,21 +33,28 @@ class Positioning {
             for (let secondAngle = firstAngle + 1; secondAngle < anglesSize; secondAngle++) {
 
                 let secondPointDist = points[angles[secondAngle]];
-                let distFirstSecond = this._calculateDistance(firstPointDist, angle[firstAngle], secondPointDist, angle[secondAngle]);
+                let distFirstSecond = this._calculateDistance(firstPointDist, angles[firstAngle], secondPointDist, angles[secondAngle]);
 
                 if (Math.abs(distFirstSecond - this.height) < this._maxOffset) {
-                    for (let thirdAngle = secondAngle + 1; thirdAngle < anglesSize; thirdAngle++) {
+                    // console.log(Math.abs(distFirstSecond - this.height));
+                    for (let thirdAngle = secondAngle + 1; thirdAngle != firstAngle; thirdAngle = (thirdAngle + 1) % 360) {
                         
                         let thirdPointDist = points[angles[thirdAngle]];
-                        let distFirstThird = this._calculateDistance(firstPointDist, angle[firstAngle], thirdPointDist, angle[thirdAngle]);
+                        let distFirstThird = this._calculateDistance(firstPointDist, angles[firstAngle], thirdPointDist, angles[thirdAngle]);
                         
-                        if (Math.abs(distFirstThird - this._triangleSide) < this._maxOffset) {
-                            let distSecondThird = this._calculateDistance(secondPointDist, angle[secondAngle], thirdPointDist, angle[thirdAngle]);
-                            if (Math.abs(distSecondThird - this._triangleSide) < this._maxOffset) {
+                        if (Math.abs(distFirstThird - this._triangleSide) < this._triangleSideOffset) {
+                            // console.log(Math.abs(distFirstThird - this._triangleSide));
+                            let distSecondThird = this._calculateDistance(secondPointDist, angles[secondAngle], thirdPointDist, angles[thirdAngle]);
+                            console.log(angles[firstAngle]);
+                            console.log(angles[secondAngle]);
+                            console.log(angles[thirdAngle]);
+                            // console.log(this._triangleSide);
+                            if (Math.abs(distSecondThird - this._triangleSide) < this._triangleSideOffset) {
+                                // console.log(distSecondThird);
                                 beacons.push([
                                     new Point(angles[firstAngle], firstPointDist),
                                     new Point(angles[secondAngle], secondPointDist),
-                                    new Point(angle[thirdAngle], thirdPointDist)
+                                    new Point(angles[thirdAngle], thirdPointDist)
                                 ]);
                             }
                         }                        
@@ -69,11 +77,11 @@ class Positioning {
         let start = 0;
         
         // Find starting beacon.
-        for (start in arr) {
+        for (let start = 0; start < arr.length; start = start + 1) {
             if (arr[start] < this._maxDistance) {
-                if (arr[start] - arr[start + 1] > this.minDiff) {
+                if (arr[(start + 359) % 360] - arr[start] > this._minDiff) {
                     points[start] = arr[start];
-                    angle = start + 1;
+                    angle = (start + 1) % 360;
                     break;
                 }
             }
@@ -88,7 +96,7 @@ class Positioning {
         while (angle != start) {
             if (!beacon) {
                 if (arr[angle] < this._maxDistance) {
-                    if (arr[angle] - arr[(angle + 1) % 360] > this.minDiff) {
+                    if (arr[(angle + 359) % 360] - arr[angle] > this._minDiff) {
                         points[angle] = arr[angle];
                         beacon = true;
                     }
@@ -97,7 +105,7 @@ class Positioning {
             else {
                 if (arr[angle] < this._maxDistance) {
                     points[angle] = arr[angle];
-                    if (arr[(angle + 1) % 360] - arr[angle] > this.minDiff) {
+                    if (arr[angle] - arr[(angle + 359) % 360] > this._minDiff) {
                         beacon = false;
                     }
                 }
