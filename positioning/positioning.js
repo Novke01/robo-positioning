@@ -36,21 +36,14 @@ class Positioning {
                 let distFirstSecond = this._calculateDistance(firstPointDist, angles[firstAngle], secondPointDist, angles[secondAngle]);
 
                 if (Math.abs(distFirstSecond - this.height) < this._maxOffset) {
-                    // console.log(Math.abs(distFirstSecond - this.height));
                     for (let thirdAngle = secondAngle + 1; thirdAngle != firstAngle; thirdAngle = (thirdAngle + 1) % 360) {
                         
                         let thirdPointDist = points[angles[thirdAngle]];
                         let distFirstThird = this._calculateDistance(firstPointDist, angles[firstAngle], thirdPointDist, angles[thirdAngle]);
                         
                         if (Math.abs(distFirstThird - this._triangleSide) < this._triangleSideOffset) {
-                            // console.log(Math.abs(distFirstThird - this._triangleSide));
                             let distSecondThird = this._calculateDistance(secondPointDist, angles[secondAngle], thirdPointDist, angles[thirdAngle]);
-                            console.log(angles[firstAngle]);
-                            console.log(angles[secondAngle]);
-                            console.log(angles[thirdAngle]);
-                            // console.log(this._triangleSide);
                             if (Math.abs(distSecondThird - this._triangleSide) < this._triangleSideOffset) {
-                                // console.log(distSecondThird);
                                 beacons.push([
                                     new Point(angles[firstAngle], firstPointDist),
                                     new Point(angles[secondAngle], secondPointDist),

@@ -40,8 +40,8 @@ let config = {
         }
     ],
     robot: {
-        x: 1500,
-        y: 1000,
+        x: 2500,
+        y: 1500,
         orientation: 0
     }
 };

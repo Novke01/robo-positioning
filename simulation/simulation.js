@@ -13,20 +13,22 @@ function startSimulation () {
     // robotX = roboXField.value;
     // robotY = roboYField.value;
     let points = collectPoints(config);
-    console.log(points);
+    // console.log(points);
     let positioning = new Positioning(config.field.width, config.field.height);
     let beacons = positioning.findBeacons(points);
     console.log(beacons);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
     for (let triangle of beacons) {
-        console.log('====================================================');
-        for (let point of triangle) {
-            console.log(point.angle);
-            console.log(point.dist);
-            // console.log((config.robot.x + Math.sin(point.angle * Math.PI / 180) * point.dist) + ' ' + (config.robot.y - Math.cos(point.angle * Math.PI / 180) * point.dist));
-        }
+        // console.log('====================================================');
+        ctx.beginPath();
+        ctx.moveTo(50 + (config.robot.x + Math.cos(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3);
+        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[1].angle * Math.PI / 180) * triangle[1].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[1].angle * Math.PI / 180) * triangle[1].dist) / 10 * 3);
+        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[2].angle * Math.PI / 180) * triangle[2].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[2].angle * Math.PI / 180) * triangle[2].dist) / 10 * 3);
+        ctx.lineTo(50 + (config.robot.x + Math.cos(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3, 50 + (config.robot.y + Math.sin(triangle[0].angle * Math.PI / 180) * triangle[0].dist) / 10 * 3);
+        ctx.stroke();
     }
-    // draw all points;
-
+    
 }
 
 function collectPoints (config) {
@@ -37,7 +39,7 @@ function collectPoints (config) {
         let c = 0;
         let dist = Infinity;
         let circles = [];
-        if (angle === 0 || angle === 180) {
+        if (angle === 90 || angle === 270) {
             a = -1;
             b = 0;
             c = config.robot.x;
@@ -74,16 +76,16 @@ function filterCircles (angle, lineA, lineB, robotX, robotY, circles) {
         b = 1;
         c = -(robotX * a + robotY * b);
     }
-    if ((angle > 270 && angle < 360) || (angle >= 0 && angle < 90)) {
-        filter = makeIsOver(a, b, c);
-    }
-    else if (angle > 90 && angle < 270) {
+    if (angle > 0 && angle < 180) {
         filter = makeIsUnder(a, b, c);
     }
-    else if (angle === 90) {
+    else if (angle > 180 && angle < 360) {
+        filter = makeIsOver(a, b, c);
+    }
+    else if (angle === 0) {
         filter = makeIsRight(robotX);
     }
-    else if (angle === 270) {
+    else if (angle === 180) {
         filter = makeIsLeft(robotX);
     }
     return circles.filter(filter);
